@@ -50,7 +50,7 @@ if __name__ == '__main__':
     theta_i = 20
     theta_Fmax = 29.0
     theta_v = 50.0
-    theta_i = 40.0
+    theta_r = 40.0
     sigma=10.0
 
     # WYLICZENIA
