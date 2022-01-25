@@ -123,6 +123,7 @@ class Rura:
     def __init__(self, D=0.0175, SR=0.002, T=0.2, lambda_R=0.35, B=None, PI_ami=None):
         self.D = D  # średnica zewnętrzna rury
         self.SR = SR  # grubość  ścianki rury
+        self.dj=self.D-2*self.SR # średnica wewnętrzna rury
         self.T = T  # odległość między rurami
         self.da = self.D - 2 * self.SR  # średnica wewnętrzna rury
         self.SR0=0.002 # normatywna grubość ścianki rury
@@ -142,7 +143,8 @@ class Rura:
 
         #wyliczenie B
     def __wylicz_B__(self):
-        inv_B=(1/self.B0)+(1.1/np.pi) *self. PI_ami* self.T*(1/(2*LM) *ln(DM/da)+(1/2*LR)*ln(Da/(Da-2SR))-(1/(2*LR0))*ln(DM/(dM-2*SR0)))
+        # Wzór 4.9
+        inv_B=(1/self.B0)+(1.1/np.pi) *self. PI_ami* self.T*(1/(2*LM) *np.log(DM/da)+(1/2*LR)*ln(Da/(Da-2*self.lambda_R))-(1/(2*LR0))*np.log(DM/(dM-2*self.SR0)))
 
 
 class Jastrych():
