@@ -123,13 +123,13 @@ class Rura:
     def __init__(self, D=0.0175, SR=0.002, T=0.2, lambda_R=0.35, B=None, PI_ami=None):
         self.D = D  # średnica zewnętrzna rury
         self.SR = SR  # grubość  ścianki rury
-        self.dj=self.D-2*self.SR # średnica wewnętrzna rury
+        self.dj = self.D - 2 * self.SR  # średnica wewnętrzna rury
         self.T = T  # odległość między rurami
         self.da = self.D - 2 * self.SR  # średnica wewnętrzna rury
-        self.SR0=0.002 # normatywna grubość ścianki rury
+        self.SR0 = 0.002  # normatywna grubość ścianki rury
         self.lambda_R0 = 0.35  # normatywny współczynnik przewodzenia ciepła rury
         self.B0 = 6.7  # nominalny współczynnik zależny od systemu ukłądania rur
-        self. PI_ami= PI_ami # PI_ami - iloczyn współczynników zależnych od konstrukcji
+        self.PI_ami = PI_ami  # PI_ami - iloczyn współczynników zależnych od konstrukcji
 
         if lambda_R is None:
             self.lambda_R = lambda_R  # współczynnik przewodzenia ciepła rury
@@ -141,26 +141,31 @@ class Rura:
         else:
             self.B = B
 
-        #wyliczenie B
+        # wyliczenie B
+
     def __wylicz_B__(self):
         # Wzór 4.9
-        inv_B=(1/self.B0)+(1.1/np.pi) *self. PI_ami* self.T*(1/(2*LM) *np.log(DM/da)+(1/2*LR)*ln(Da/(Da-2*self.lambda_R))-(1/(2*LR0))*np.log(DM/(dM-2*self.SR0)))
+        inv_B = (1 / self.B0) + (1.1 / np.pi) * self.PI_ami * self.T * (
+                    1 / (2 * LM) * np.log(DM / da) + (1 / 2 * LR) * ln(Da / (Da - 2 * self.lambda_R)) - (
+                        1 / (2 * LR0)) * np.log(DM / (dM - 2 * self.SR0)))
 
 
 class Jastrych():
-    def __init__(self,lambda_E=1.2, su=0.048):
+    def __init__(self, lambda_E=1.2, su=0.048):
         self.lambda_E = lambda_E  # współczynnik przewodzenia ciepła jastrychu
         self.su = su  # grubość warstwy jastrychu nad rurami
         if (self.su / self.lambda_E <= 0.01) or (self.su / self.lambda_E >= 0.0792):
             print('Nieprawidłowa proporcja wartości: 0.01<= su/lambda_E<=0.0792')
 
+
 class Wykladzina():
-    def __init__(self,d,R_l_B):
+    def __init__(self, d, R_l_B):
         self.d = d  # grubość wykładziny podłogowej
         self.R_l_B = R_l_B  # opór cieplny wykładziny:
 
+
 class Temperatury():
-    def __init__(self,theta_i,theta_Fmax,theta_v,theta_r,sigma):
+    def __init__(self, theta_i, theta_Fmax, theta_v, theta_r, sigma):
         self.theta_i = theta_i  # projektowa temperatura wewnętrzna
         self.theta_Fmax = theta_Fmax  # maksymalna temperatura powierzchni płyty grzewczej - wpływa też typ paneli
         self.theta_v = theta_v  # temperatura zasilania czynnika grzewczego
@@ -169,6 +174,7 @@ class Temperatury():
 
         # delta_theta_H - średnia logarytmiczna różnica temperatur czynnika grzewczego
         self.delta_theta_H = wylicz_delta_theta_H(self.theta_v, self.theta_r, self.theta_i)
+
 
 class PomieszczenieInstalacja():
     def __init__(self, AF, nazwa_pomieszczenia='Pomieszczenie1',
@@ -185,16 +191,16 @@ class PomieszczenieInstalacja():
         self.QN = QN  # projektowane straty ciepła pomieszczenia
 
         # WYKLADZINA
-        self.wykladzina=Wykladzina(d=d,R_l_B=R_l_B)
+        self.wykladzina = Wykladzina(d=d, R_l_B=R_l_B)
 
         # JASTRYCH
-        self.jastrych=Jastrych(lambda_E=lambda_E,su=su)
+        self.jastrych = Jastrych(lambda_E=lambda_E, su=su)
 
         # RURY
         self.rura = Rura(D=D, SR=SR, T=T, lambda_R=lambda_R, B=B)
 
         # TEMPERATURY
-        self.temp=Temperatury(theta_i=theta_i,theta_Fmax=theta_Fmax,theta_v=theta_v,theta_r=theta_r,sigma=sigma)
+        self.temp = Temperatury(theta_i=theta_i, theta_Fmax=theta_Fmax, theta_v=theta_v, theta_r=theta_r, sigma=sigma)
 
         self.aktualizuj()
 
@@ -226,12 +232,10 @@ class PomieszczenieInstalacja():
         """
 
         # PI_ami - iloczyn współczynników zależnych od konstrukcji
-        self.PI_ami=self.aB * pow(self.aT, self.mT) * pow(self.aD, self.mD) * pow(self.aU, self.mU)
+        self.PI_ami = self.aB * pow(self.aT, self.mT) * pow(self.aD, self.mD) * pow(self.aU, self.mU)
 
         # KH - równoważny współczynnik przenikania ciepła
         self.KH = self.rura.B * self.PI_ami
-
-
 
         # q - gęstrość strumienia ciepła emitowana z powierzchni płyty grzewczej
         self.q = self.KH * self.temp.delta_theta_H
@@ -272,6 +276,7 @@ class PomieszczenieInstalacja():
         print(' \n\t WSPÓLCZYNNIKI')
         print(f'B - współczynnik zależny od systemu ukłądania rur: {self.rura.B} [C]')
         print(f'KH - równoważny współczynnik przenikania ciepła: {self.KH} [W/(m^2*K)]')
-        print(f'delta_theta_H - średnia logarytmiczna różnica temperatur czynnika grzewczego: {self.temp.delta_theta_H} [C]')
+        print(
+            f'delta_theta_H - średnia logarytmiczna różnica temperatur czynnika grzewczego: {self.temp.delta_theta_H} [C]')
         print(f'q - gęstrość strumienia ciepła emitowana z powierzchni płyty grzewczej: {self.q} [C]\n')
         print(f'BG - współczynnik do wyliczenia granicznego strumienia ciepła: {self.BG} [-]')
