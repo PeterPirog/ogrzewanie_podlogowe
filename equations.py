@@ -220,25 +220,25 @@ class PomieszczenieInstalacja():
         self.mT = wylicz_mT(self.rura.T)
         self.mU = wylicz_mU(self.jastrych.su)
         self.mD = wylicz_mD(self.rura.D)
-        """
-        print(f'D={self.D}')
-        print(f'aB={self.aB}')
-        print(f'aT={self.aT}')
-        print(f'mT={self.mT}')
-        print(f'aD={self.aD}')
-        print(f'mD={self.mD}')
-        print(f'aU={self.aU}')
-        print(f'mU={self.mU}')
-        """
 
-        # PI_ami - iloczyn współczynników zależnych od konstrukcji
-        self.PI_ami = self.aB * pow(self.aT, self.mT) * pow(self.aD, self.mD) * pow(self.aU, self.mU)
+        self.delta_theta_H=wylicz_delta_theta_H(self.temp.theta_v,self.temp.theta_r,self.temp.theta_i)
 
         # KH - równoważny współczynnik przenikania ciepła
-        self.KH = self.rura.B * self.PI_ami
+        self.KH = self.rura.B*self.aB * pow(self.aT, self.mT) * pow(self.aD, self.mD) * pow(self.aU, self.mU)
+
+        # gestość strumienia ciepła w funkcji średniej logarytmicznej róznicy temperatur
+        self.q=self.KH*self.delta_theta_H
+
+
+
+
+        # PI_ami - iloczyn współczynników zależnych od konstrukcji
+        #self.PI_ami = self.aB * pow(self.aT, self.mT) * pow(self.aD, self.mD) * pow(self.aU, self.mU)
+
+
 
         # q - gęstrość strumienia ciepła emitowana z powierzchni płyty grzewczej
-        self.q = self.KH * self.temp.delta_theta_H
+        self.qN = self.QN/self.AF
 
         # Wyliczenia granicznej gęstości strumienia ciepła
         self.BG = wylicz_BG(self.jastrych.su, self.jastrych.lambda_E, self.rura.T)
@@ -273,10 +273,28 @@ class PomieszczenieInstalacja():
 
         # WARTOŚCI WYLICZONE
         print(' \n WYLICZENIA')
+        print(f'qN - gęstrość strumienia ciepła emitowana z powierzchni płyty grzewczej: {self.qN} [W/m^2]\n')
+        print(' \n\t ----------------------------------')
         print(' \n\t WSPÓLCZYNNIKI')
-        print(f'B - współczynnik zależny od systemu ukłądania rur: {self.rura.B} [C]')
+        print(f'B - współczynnik zależny od systemu ukłądania rur: {self.rura.B} [W/(m^2*K)]')
+        print(f'aB - współczynnik uwzględniający rodzaj wykładziny podłogowej: {self.aB}')
+        print(f'aT - współczynnik zależny od współczynnika oporu cieplnego wykładziny podłogowej: {self.aT}')
+        print(f'aD - współczynnik uwzględniający średnicę zewnętrzną rury: {self.aD}')
+        print(f'aU - współczynnik zależny od grubości jastrychu: {self.aU}')
+
+        print(f'mT - współczynnik: {self.mT}')
+        print(f'mU - współczynnik: {self.mU}')
+        print(f'mD - współczynnik: {self.mD}')
+        print(f'delta_theta_H - współczynnik: {self.delta_theta_H} [C]')
         print(f'KH - równoważny współczynnik przenikania ciepła: {self.KH} [W/(m^2*K)]')
-        print(
-            f'delta_theta_H - średnia logarytmiczna różnica temperatur czynnika grzewczego: {self.temp.delta_theta_H} [C]')
-        print(f'q - gęstrość strumienia ciepła emitowana z powierzchni płyty grzewczej: {self.q} [C]\n')
+        print(f'q - gestość strumienia ciepła w funkcji średniej logarytmicznej róznicy temperatur: {self.q} [W/(m^2)]')
+
         print(f'BG - współczynnik do wyliczenia granicznego strumienia ciepła: {self.BG} [-]')
+
+
+
+
+
+        print(' \n\t ----------------------------------')
+
+
