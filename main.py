@@ -52,6 +52,6 @@ if __name__ == '__main__':
                                     lambda_E=lambda_E, su=su,  # JASTRYCH
                                     D=D, SR=0.002, T=T, lambda_R=None, B=None,  # RURY
                                     theta_i=theta_i, theta_Fmax=theta_Fmax, theta_v=theta_v, theta_r=theta_r,
-                                    sigma=sigma)  # Temperatury
+                                    sigma=sigma)  #Temperatury
 
     inst1.podsumowanie()
